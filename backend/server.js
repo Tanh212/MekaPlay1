@@ -1,14 +1,18 @@
 // server.js
 const jsonServer = require('json-server');
 const auth = require('json-server-auth');
-const server = jsonServer.create();
-const router = jsonServer.router('db.json');
-const middlewares = jsonServer.defaults();
+const cors = require('cors');
 
-server.db = router.db;
-server.use(middlewares);
-server.use(auth);
-server.use(router);
-server.listen(8000, () => {
-  console.log('JSON Server is running on http://localhost:8000');
+const app = jsonServer.create();
+const router = jsonServer.router('db.json');
+
+app.db = router.db;
+
+app.use(cors());
+app.use(jsonServer.defaults());
+app.use(auth);
+app.use(router);
+
+app.listen(3000, () => {
+  console.log('🔥 JSON Server is running at http://localhost:3000');
 });
