@@ -1,4 +1,4 @@
-// import { createBrowserRouter } from "react-router-dom";
+// import { createBrowserRouter, Router } from "react-router-dom";
 
 // // Layouts
 // // import ClientLayout from "../components/layouts/CLientLayout";
@@ -34,6 +34,22 @@
 //       { path: "products", element: <ProductManager /> },
 //       { path: "orders", element: <OrderManager /> },
 //     ],
+//   },
+// ]);
+
+//export default Router;
+
+// import { createBrowserRouter } from 'react-router-dom';
+// import ProdList from '../components/admin/ProdList';
+
+// const router = createBrowserRouter([
+//   {
+//     path: '/admin/products',
+//     element: <ProdList />,
+//   },
+//   {
+//     path: '*',
+//     element: <div>404 - Page not found</div>, // hoặc dùng NotFound.tsx
 //   },
 // ]);
 
