@@ -40,13 +40,13 @@
 
 import ProdList from "./components/admin/ProdList";
 import "./App.css";
-// import CategoryList from "./components/CategoryList";
+import CategoryList from "./components/admin/CategoryList";
 
 function App() {
   return (
     <div>
       <ProdList />
-      {/* <CategoryList /> */}
+      <CategoryList />
     </div>
   );
 }
