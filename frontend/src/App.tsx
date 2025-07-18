@@ -41,12 +41,17 @@
 import ProdList from "./components/admin/ProdList";
 import "./App.css";
 import CategoryList from "./components/admin/CategoryList";
-
+import BrandList from "./components/admin/BrandList";
+import UserList from "./components/admin/UserList"
+import OrderList from "./components/admin/OrderList";
 function App() {
   return (
     <div>
       <ProdList />
       <CategoryList />
+      <BrandList />
+      <UserList />
+      <OrderList />
     </div>
   );
 }
