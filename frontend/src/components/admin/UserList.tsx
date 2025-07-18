@@ -7,8 +7,7 @@ interface User {
   email: string;
   role: 'admin' | 'staff' | 'customer';
 }
-
-export function UserList() {
+function UserList() {
   const fetchUsers = async (): Promise<User[]> => {
     const res = await fetch('http://localhost:3000/users');
     return res.json();

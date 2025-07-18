@@ -42,16 +42,41 @@ import ProdList from "./components/admin/ProdList";
 import "./App.css";
 import CategoryList from "./components/admin/CategoryList";
 import BrandList from "./components/admin/BrandList";
-import UserList from "./components/admin/UserList"
+import UserList from "./components/admin/UserList";
 import OrderList from "./components/admin/OrderList";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <h1>Trang chủ</h1>,
+  },
+  {
+    path: "/products",
+    element: <ProdList />,
+  },
+  {
+    path: "/orders",
+    element: <OrderList />,
+  },
+  {
+    path: "/categories",
+    element: <CategoryList />,
+  },
+  {
+    path: "/brands",
+    element: <BrandList />,
+  },
+  {
+    path: "/users",
+    element: <UserList />,
+  },
+]);
+
 function App() {
   return (
     <div>
-      <ProdList />
-      <CategoryList />
-      <BrandList />
-      <UserList />
-      <OrderList />
+      <RouterProvider router={router} />
     </div>
   );
 }

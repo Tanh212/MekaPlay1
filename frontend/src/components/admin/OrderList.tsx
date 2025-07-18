@@ -8,8 +8,7 @@ interface Order {
   status: 'pending' | 'completed' | 'cancelled';
   createdAt: string;
 }
-
-export function OrderList() {
+function OrderList() {
   const fetchOrders = async (): Promise<Order[]> => {
     const res = await fetch('http://localhost:3000/orders');
     return res.json();
@@ -18,6 +17,7 @@ export function OrderList() {
   const { data, isLoading, error } = useQuery({
     queryKey: ['orders'],
     queryFn: fetchOrders,
+    refetchInterval: 2000,
   });
 
   const columns = [
