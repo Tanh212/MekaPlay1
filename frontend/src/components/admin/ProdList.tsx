@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { Table, Spin, Image, Tag } from "antd";
+import { Table, Spin, Image, Tag, Button } from "antd";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 interface Products {
   id: number;
   name: string;
@@ -14,11 +14,13 @@ interface Products {
 }
 
 function ProdList() {
+  const navigate = useNavigate();
   const fetchProducts = async () => {
     const response = await fetch("http://localhost:3000/products");
     const data = await response.json();
     console.log("Fetched products:", data); // 🐛 Debug để xem API trả về gì
     return data;
+    
   };
 
   const { data, isLoading, error } = useQuery({
@@ -76,6 +78,7 @@ function ProdList() {
         loading={isLoading}
         pagination={{ pageSize: 5 }}
       />
+       <Button onClick={() => navigate("/")}>Về trang chủ</Button>
     </div>
   );
 }

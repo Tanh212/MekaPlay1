@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { Table } from "antd";
+import { Table, Button } from "antd";
+import { useNavigate } from "react-router-dom";
 
 function CategoryList() {
+  const navigate= useNavigate();
   const fetchCategories = async () => {
     const response = await fetch("http://localhost:3000/categories");
     return response.json();
@@ -29,6 +31,7 @@ function CategoryList() {
         rowKey={"id"}
         loading={isLoading}
       />
+      <Button onClick={() => navigate("/")}>Về trang chủ</Button>
     </div>
   );
 }

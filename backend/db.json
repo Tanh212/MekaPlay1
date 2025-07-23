@@ -55,6 +55,11 @@
       "email": "usera@gmail.com",
       "password": "123456",
       "role": "user"
+    },
+    {
+      "email": "anhtien210204@gmail.com",
+      "password": "$2a$10$fAU0aWaJm4HMbGvsMsEKd.SL4mNbrKeQdTlo8K/xO4N9KgJdwW/Gm",
+      "id": 3
     }
   ],
   "orders": [

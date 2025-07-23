@@ -1,50 +1,41 @@
-import { useForm } from "react-hook-form";
-import { register as registerApi } from "../services/authApi";
-import { toast } from "react-toastify";
+import { Form, Input, Button, message } from "antd";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-type RegisterForm = {
-  email: string;
-  password: string;
-};
-
-export default function Register() {
-  // Khởi tạo form với react-hook-form
-  const { register, handleSubmit } = useForm<RegisterForm>();
-
-  // Hook dùng để điều hướng (chuyển trang)
+function Register() {
   const navigate = useNavigate();
 
-  // Khi người dùng bấm submit
-  const onSubmit = async (data: RegisterForm) => {
+  const onFinish = async (values: any) => {
     try {
-      await registerApi(data);
-      toast.success("Đăng ký thành công!");
-      navigate("/login"); // Chuyển sang trang đăng nhập
+      await axios.post("http://localhost:3000/register", {
+        email: values.email,
+        password: values.password,
+      });
+      message.success("Đăng ký thành công!");
+      navigate("/login");
     } catch (err) {
-      toast.error("Email đã tồn tại hoặc lỗi server");
+      message.error("Đăng ký thất bại!");
     }
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      style={{ maxWidth: 400, margin: "auto", marginTop: 60 }}
-    >
+    <div style={{ padding: 24, maxWidth: 400, margin: "0 auto" }}>
       <h2>Đăng ký</h2>
-      <input
-        {...register("email")}
-        placeholder="Email"
-        type="email"
-        required
-      />
-      <input
-        {...register("password")}
-        placeholder="Mật khẩu"
-        type="password"
-        required
-      />
-      <button type="submit">Đăng ký</button>
-    </form>
+      <Form onFinish={onFinish} layout="vertical">
+        <Form.Item name="email" label="Email" rules={[{ required: true }]}>
+          <Input />
+        </Form.Item>
+        <Form.Item name="password" label="Mật khẩu" rules={[{ required: true }]}>
+          <Input.Password />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Đăng ký
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
   );
 }
+
+export default Register;
