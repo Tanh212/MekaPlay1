@@ -1,30 +1,62 @@
-import { useQuery } from '@tanstack/react-query';
-import { Table } from 'antd';
+import { useQuery } from "@tanstack/react-query";
+import { Table } from "antd";
+import Header from "../layouts/Header";
+import { Link, useSearchParams } from "react-router-dom";
 
 interface User {
   id: number;
   name: string;
   email: string;
-  role: 'admin' | 'staff' | 'customer';
 }
+
 function UserList() {
-  const fetchUsers = async (): Promise<User[]> => {
-    const res = await fetch('http://localhost:3000/users');
+  const [searchParams] = useSearchParams();
+  const name = searchParams.get("name");
+
+  const fetchUsers = async () => {
+    const res = await fetch(
+      `http://localhost:3001/users?name_like=${name || ""}`
+    );
     return res.json();
   };
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['users'],
+  const { data, isLoading, error } = useQuery<User[]>({
+    queryKey: ["users", name], // thêm `name` vào queryKey để re-fetch khi search thay đổi
     queryFn: fetchUsers,
   });
 
   const columns = [
-    { title: 'User ID', dataIndex: 'id' },
-    { title: 'Name', dataIndex: 'name' },
-    { title: 'Email', dataIndex: 'email' },
-    { title: 'Role', dataIndex: 'role' },
+    {
+      title: "ID",
+      dataIndex: "id",
+      render: (id: number) => (
+        <Link to={`/user/detail/${id}`}>#{id}</Link>
+      ),
+    },
+    {
+      title: "Name",
+      dataIndex: "name",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+    },
   ];
 
-  return <Table dataSource={data || []} columns={columns} rowKey="id" loading={isLoading} />;
+  return (
+    <div style={{ padding: 24 }}>
+      <Header />
+      {error && <p style={{ color: "red" }}>Error: {(error as Error).message}</p>}
+
+      <Table
+        dataSource={data}
+        columns={columns}
+        rowKey="id"
+        loading={isLoading}
+        pagination={{ pageSize: 5 }}
+      />
+    </div>
+  );
 }
+
 export default UserList;

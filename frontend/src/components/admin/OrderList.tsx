@@ -1,30 +1,35 @@
 import { useQuery } from "@tanstack/react-query";
-import { Table, Tag,Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Table, Tag } from "antd";
+import Header from "../layouts/Header";
 
 interface Order {
   id: number;
   userId: number;
   total: number;
   status: "pending" | "completed" | "cancelled";
-  createdAt: string;
 }
+
 function OrderList() {
-  const navigate= useNavigate();
   const fetchOrders = async (): Promise<Order[]> => {
-    const res = await fetch("http://localhost:3000/orders");
+    const res = await fetch("http://localhost:3001/orders");
+    if (!res.ok) throw new Error("Failed to fetch orders");
     return res.json();
   };
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<Order[]>({
     queryKey: ["orders"],
     queryFn: fetchOrders,
-    refetchInterval: 2000,
   });
 
   const columns = [
-    { title: "Order ID", dataIndex: "id" },
-    { title: "User ID", dataIndex: "userId" },
+    {
+      title: "ID",
+      dataIndex: "id",
+    },
+    {
+      title: "User ID",
+      dataIndex: "userId",
+    },
     {
       title: "Total",
       dataIndex: "total",
@@ -33,33 +38,31 @@ function OrderList() {
     {
       title: "Status",
       dataIndex: "status",
-      render: (status: string) => (
-        <Tag
-          color={
-            status === "completed"
-              ? "green"
-              : status === "cancelled"
-              ? "red"
-              : "orange"
-          }
-        >
-          {status}
-        </Tag>
-      ),
+      render: (status: Order["status"]) => {
+        const color =
+          status === "completed"
+            ? "green"
+            : status === "cancelled"
+            ? "red"
+            : "orange";
+        return <Tag color={color}>{status.toUpperCase()}</Tag>;
+      },
     },
-    { title: "Created At", dataIndex: "createdAt" },
   ];
 
   return (
-    <div>
-    <Table
-      dataSource={data || []}
-      columns={columns}
-      rowKey="id"
-      loading={isLoading}
-    />
-    <Button onClick={() => navigate("/")}>Về trang chủ</Button>
+    <div style={{ padding: 24 }}>
+      <Header />
+      {error && <p style={{ color: "red" }}>Lỗi: {(error as Error).message}</p>}
+      <Table
+        dataSource={data}
+        columns={columns}
+        rowKey="id"
+        loading={isLoading}
+        pagination={{ pageSize: 5 }}
+      />
     </div>
   );
 }
+
 export default OrderList;

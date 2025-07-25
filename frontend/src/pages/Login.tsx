@@ -1,7 +1,7 @@
 import { Form, Input, Button, message } from "antd";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../stores/auth";
+import { useAuth } from "../services/auth";
 
 function Login() {
   const navigate = useNavigate();

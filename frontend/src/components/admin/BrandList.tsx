@@ -1,39 +1,46 @@
 import { useQuery } from "@tanstack/react-query";
-import { Table, Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Table } from "antd";
+import Header from "../layouts/Header";
+
 interface Brand {
   id: number;
   name: string;
-  origin: string;
 }
 
 function BrandList() {
-  const navigate = useNavigate();
   const fetchBrands = async (): Promise<Brand[]> => {
-    const res = await fetch("http://localhost:3000/brands");
+    const res = await fetch("http://localhost:3001/brands");
+    if (!res.ok) throw new Error("Failed to fetch brands");
     return res.json();
   };
 
-  const { data, isLoading, error } = useQuery({
+  const { data, isLoading, error } = useQuery<Brand[]>({
     queryKey: ["brands"],
     queryFn: fetchBrands,
   });
 
   const columns = [
-    { title: "Brand ID", dataIndex: "id" },
-    { title: "Name", dataIndex: "name" },
-    { title: "Origin", dataIndex: "origin" },
+    {
+      title: "ID",
+      dataIndex: "id",
+    },
+    {
+      title: "Tên thương hiệu",
+      dataIndex: "name",
+    },
   ];
 
   return (
-    <div>
+    <div style={{ padding: 24 }}>
+      <Header />
+      {error && <p style={{ color: "red" }}>Lỗi: {(error as Error).message}</p>}
       <Table
-        dataSource={data || []}
+        dataSource={data}
         columns={columns}
         rowKey="id"
         loading={isLoading}
+        pagination={{ pageSize: 5 }}
       />
-      <Button onClick={() => navigate("/")}>Về trang chủ</Button>
     </div>
   );
 }

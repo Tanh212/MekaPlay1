@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./router/ProtectedRoute";
 import AdminLayout from "./components/layouts/AdminLayout";
+import ProdDetail from "./pages/ProdDetail";
 
 const router = createBrowserRouter([
   {
@@ -28,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "/products",
     element: <ProdList />,
+  },
+  {
+    path: "/product/detail/productId",
+    element: <ProdDetail />,
   },
   {
     path: "/orders",

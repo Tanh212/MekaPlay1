@@ -7,6 +7,7 @@ function Home() {
   return (
     <div>
       <h1>Trang chủ</h1>
+      <p>Chào mừng bạn đến với trang chủ của chúng tôi!</p>
       <div style={{ display: "flex", gap: 20 , marginRight: 24}}>
         <Button type="primary" onClick={() => navigate("/products")}>
           Product

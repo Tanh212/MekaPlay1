@@ -1,37 +1,37 @@
 import { useQuery } from "@tanstack/react-query";
-import { Table, Spin, Image, Tag, Button } from "antd";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-interface Products {
+import { Image, Spin, Table } from "antd";
+import Header from "../layouts/Header";
+import { Link, useSearchParams } from "react-router-dom";
+
+interface Product {
   id: number;
   name: string;
   price: number;
-  brandId: number;
-  categoryId: number;
-  stock: number;
-  status: "available" | "out-of-stock";
-  thumbnail: string;
+  image: string;
+  description: string;
 }
 
 function ProdList() {
-  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const name = searchParams.get("name");
+
   const fetchProducts = async () => {
-    const response = await fetch("http://localhost:3000/products");
-    const data = await response.json();
-    console.log("Fetched products:", data); // 🐛 Debug để xem API trả về gì
-    return data;
-    
+    const res = await fetch(
+      `http://localhost:3001/products?name_like=${name || ""}`
+    );
+    return res.json();
   };
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["products"],
+  const { data, isLoading, error } = useQuery<Product[]>({
+    queryKey: ["products", name],
     queryFn: fetchProducts,
   });
-  console.log(data, isLoading, error);
+
   const columns = [
     {
       title: "ID",
       dataIndex: "id",
+      render: (id: number) => <Link to={`/product/detail/${id}`}>#{id}</Link>,
     },
     {
       title: "Name",
@@ -40,46 +40,44 @@ function ProdList() {
     {
       title: "Price",
       dataIndex: "price",
-      sorter: (a: Products, b: Products) => a.price - b.price,
-      render: (price: any) =>
-        typeof price === "number"
-          ? price.toLocaleString("vi-VN") + " ₫"
-          : price?.amount?.toLocaleString("vi-VN") + " ₫",
-    },
-    {
-      title: "Stock",
-      dataIndex: "stock",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      render: (status: string) => (
-        <Tag color={status === "available" ? "green" : "red"}>
-          {status === "available" ? "In stock" : "Out of stock"}
-        </Tag>
-      ),
+      sorter: (a: Product, b: Product) => a.price - b.price,
+      render: (price: number) => price.toLocaleString("vi-VN") + " ₫",
     },
     {
       title: "Image",
-      dataIndex: "thumnail",
-      render: (src: string, record: Products) => (
-        <Image src={record.thumbnail} alt={record.name} width={80} />
+      dataIndex: "image",
+      render: (src: string, record: Product) => (
+        <Image src={src} width={120} alt={record.name} />
+      ),
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      render: (desc: string) => (
+        <span>{desc?.length > 60 ? desc.slice(0, 60) + "..." : desc}</span>
       ),
     },
   ];
+
   return (
     <div style={{ padding: 24 }}>
-      <h2>Product List</h2>
-      {error && <p style={{ color: "red" }}>Lỗi: {(error as Error).message}</p>}
-      <Table
-        dataSource={data || []}
-        columns={columns}
-        rowKey="id"
-        loading={isLoading}
-        pagination={{ pageSize: 5 }}
-      />
-       <Button onClick={() => navigate("/")}>Về trang chủ</Button>
+      <Header />
+      {isLoading ? (
+        <div style={{ textAlign: "center", marginTop: 40 }}>
+          <Spin size="large" />
+        </div>
+      ) : error ? (
+        <p style={{ color: "red" }}>Error: {(error as Error).message}</p>
+      ) : (
+        <Table
+          dataSource={data}
+          columns={columns}
+          rowKey="id"
+          pagination={{ pageSize: 5 }}
+        />
+      )}
     </div>
   );
 }
+
 export default ProdList;

@@ -1,16 +1,9 @@
 {
 	"dependencies": {
-		"json-server": "0.17.3",
+		"json-server": "^0.17.4",
 		"json-server-auth": "^2.1.0"
 	},
 	"scripts": {
-		"server": "json-server-auth db.json --routes routes.json --watch --port 3000"
-	},
-	"name": "backend",
-	"version": "1.0.0",
-	"main": "server.js",
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
-	"description": ""
+		"server": "json-server --watch db.json --port 3000"
+	}
 }

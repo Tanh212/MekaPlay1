@@ -1,38 +1,48 @@
 import { useQuery } from "@tanstack/react-query";
-import { Table, Button } from "antd";
-import { useNavigate } from "react-router-dom";
+import { Table } from "antd";
+import Header from "../layouts/Header";
+
+interface Category {
+  id: number;
+  name: string;
+}
 
 function CategoryList() {
-  const navigate= useNavigate();
-  const fetchCategories = async () => {
-    const response = await fetch("http://localhost:3000/categories");
-    return response.json();
+  const fetchCategories = async (): Promise<Category[]> => {
+    const res = await fetch("http://localhost:3001/categories");
+    if (!res.ok) throw new Error("Failed to fetch categories");
+    return res.json();
   };
-  const { data, isLoading } = useQuery({
+
+  const { data, isLoading, error } = useQuery<Category[]>({
     queryKey: ["categories"],
     queryFn: fetchCategories,
   });
+
   const columns = [
     {
-      title: "No.",
+      title: "STT",
       dataIndex: "id",
     },
     {
-      title: "Category Name",
+      title: "Tên danh mục",
       dataIndex: "name",
     },
   ];
 
   return (
-    <div>
+    <div style={{ padding: 24 }}>
+      <Header />
+      {error && <p style={{ color: "red" }}>Lỗi: {(error as Error).message}</p>}
       <Table
         dataSource={data}
         columns={columns}
-        rowKey={"id"}
+        rowKey="id"
         loading={isLoading}
+        pagination={{ pageSize: 5 }}
       />
-      <Button onClick={() => navigate("/")}>Về trang chủ</Button>
     </div>
   );
 }
+
 export default CategoryList;

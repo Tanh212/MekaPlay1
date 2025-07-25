@@ -1,18 +1,20 @@
+// src/store/auth.ts
 import { create } from "zustand";
 
-type AuthState = {
+interface AuthState {
   token: string | null;
-  login: (token: string) => void;
-  logout: () => void;
-};
+  setToken: (token: string | null) => void;
+  clearToken: () => void;
+}
 
-export const useAuth = create<AuthState>((set) => ({
-  token: localStorage.getItem("token"),
-  login: (token) => {
-    localStorage.setItem("token", token);
+export const useAuthStore = create<AuthState>((set) => ({
+  token: localStorage.getItem("token"), // lấy token từ localStorage (nếu có)
+  setToken: (token) => {
+    if (token) localStorage.setItem("token", token);
+    else localStorage.removeItem("token");
     set({ token });
   },
-  logout: () => {
+  clearToken: () => {
     localStorage.removeItem("token");
     set({ token: null });
   },

@@ -1,15 +1,16 @@
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../stores/auth";
-import type { JSX } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { useAuthStore } from "../stores/auth";
+interface Props {
+  children: React.ReactNode;
+}
 
-const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
-  const { token } = useAuth();
+export default function ProtectedRoute({ children }: Props) {
+  const token = useAuthStore((state) => state.token);
+  const location = useLocation();
 
   if (!token) {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" replace state={{ from: location }} />;
   }
 
-  return children;
-};
-
-export default ProtectedRoute;
+  return <>{children}</>;
+}
