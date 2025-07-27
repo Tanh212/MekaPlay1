@@ -1,0 +1,76 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Mô hình One Piece - Luffy",
+      "price": 250000,
+      "thumbnail": "https://via.placeholder.com/100x100?text=Luffy",
+      "description": "Mô hình Luffy chất lượng cao, chi tiết sắc nét."
+    },
+    {
+      "id": 2,
+      "name": "Mô hình Naruto",
+      "price": 300000,
+      "thumbnail": "https://via.placeholder.com/100x100?text=Naruto",
+      "description": "Mô hình Naruto Uzumaki chuẩn tỉ lệ 1:6."
+    },
+    {
+      "id": 3,
+      "name": "Mô hình Dragon Ball - Goku",
+      "price": 280000,
+      "thumbnail": "https://via.placeholder.com/100x100?text=Goku",
+      "description": "Goku dạng Super Saiyan đầy uy lực."
+    },
+    {
+      "name": "Mô hình standee Hololive HoloX",
+      "price": 79000,
+      "thumbnail": "https://product.hstatic.net/1000231532/product/mo_hinh_standee_hololive_holox_-_st0030_367f1ee5559740d588b33b4a877ed0b7_master.jpg",
+      "description": "đẹp lắm",
+      "categoryId": 2,
+      "brandId": 1,
+      "id": "d323"
+    },
+    {
+      "id": "d11b",
+      "name": "Mô hình Pokemon Figure Stamp",
+      "price": 89000,
+      "thumbnail": "https://product.hstatic.net/1000231532/product/pokemon_figure_stamp_ban_quyen_chinh_hang_the_pokemon_company_nhat_ban_4c8dcb01a46a4df989a3845bd2f122c9_master.jpg",
+      "description": "Mô hình Pokemon Figure Stamp có bán tại mekaplay! là bộ sưu tập mô hình các nhân vật Pokemon đáng yêu được thiết kế dưới hình dạng con dấu. Mỗi mô hình đi kèm với hộp Mica tiện lợi, giúp bảo quản sản phẩm một cách an toàn, đồng thời dễ dàng đặt trang trí mà không cần phải mở hộp. Ngoài việc làm mô hình trang trí, bạn còn có thể gắn đầu bút, dùng làm con dấu, cục tẩy viết chì. Bộ sưu tập này bao gồm các nhân vật như Pikachu, Psyduck, Jigglypuff, Slowpoke, Bulbasaur, Charmander, Eevee, Cubone và Squirtle. Các mô hình được thiết kế với màu sắc đa dạng và hình ảnh đáng yêu, phù hợp cho người hâm mộ Pokemon. Đây chắc chắn sẽ là một sản phẩm mà fan hâm mộ Pokemon không nên bỏ qua!",
+      "categoryId": 1,
+      "brandId": 1,
+      "stock": 0,
+      "status": "available"
+    },
+    {
+      "id": "dc24",
+      "name": "Mô hình Pokemon Transform PokeBall",
+      "price": 219000,
+      "thumbnail": "https://product.hstatic.net/1000231532/product/_bien_hoa_tu_qua_banh_pokeball_meowth_cua_team_rocket_ngoi_om_ban_chan_18a4f80fbdb14b488c416500f64b6609_master.jpg",
+      "description": "Mô hình Pokemon Transform PokeBall có bán tại nShop! là bộ sưu tập độc đáo bao gồm các nhân vật Pokemon được yêu thích như Pikachu, Eevee, Meowth, Bulbasaur, Charmander và Squirtle. Mỗi Pokemon được chế tác tỉ mỉ và chi tiết, ngồi gọn trong quả cầu PokeBall. Khi mở quả cầu sẽ bung ra Pokemon cùng các hiệu ứng đẹp mắt. Đây chắc chắn sẽ là một sản phẩm không thể thiếu trong bộ sưu tập của các fan hâm mộ Pokemon chân chính!",
+      "categoryId": 1,
+      "brandId": 1,
+      "stock": 0,
+      "status": "available"
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Mô hình One Piece"
+    },
+    {
+      "id": 2,
+      "name": "Mô hình Naruto"
+    }
+  ],
+  "brands": [
+    {
+      "id": 1,
+      "name": "Bandai"
+    },
+    {
+      "id": 2,
+      "name": "Kotobukiya"
+    }
+  ]
+}
