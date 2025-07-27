@@ -1,21 +1,25 @@
 // src/store/auth.ts
 import { create } from "zustand";
 
-interface AuthState {
-  token: string | null;
-  setToken: (token: string | null) => void;
-  clearToken: () => void;
+interface User {
+  email: string;
+  id: number;
+  role?: string; // Có thể dùng để phân quyền: admin, staff, etc.
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
-  token: localStorage.getItem("token"), // lấy token từ localStorage (nếu có)
-  setToken: (token) => {
-    if (token) localStorage.setItem("token", token);
-    else localStorage.removeItem("token");
-    set({ token });
-  },
-  clearToken: () => {
-    localStorage.removeItem("token");
-    set({ token: null });
-  },
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  login: (user: User, token: string) => void;
+  logout: () => void;
+}
+
+const useAuthStore = create<AuthState>((set) => ({
+  user: null,
+  token: null,
+
+  login: (user, token) => set({ user, token }),
+  logout: () => set({ user: null, token: null }),
 }));
+
+export default useAuthStore;
