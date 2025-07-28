@@ -12,6 +12,7 @@ import UserList from "../pages/admin/UserList";
 import Register from "../pages/auth/Register";
 import Login from "../pages/auth/Login";
 import ProdEdit from "../pages/admin/ProdEdit";
+import ProdDetail from "../pages/admin/ProdDetail";
 
 const router = createBrowserRouter([
   {
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
+  { path: "/product/detail/:id", element: <ProdDetail /> },
   {
     path: "/admin",
     element: (
@@ -33,6 +35,7 @@ const router = createBrowserRouter([
       { index: true, element: <ProdList /> },
       { path: "products", element: <ProdList /> },
       { path: "products/add", element: <ProdAdd /> },
+      
       { path: "products/edit/:id", element: <ProdEdit /> },
       { path: "orders", element: <OrderList /> },
       { path: "categories", element: <CategoryList /> },
