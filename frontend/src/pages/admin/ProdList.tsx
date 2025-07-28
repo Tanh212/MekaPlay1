@@ -9,6 +9,7 @@ interface Product {
   name: string;
   price: number;
   image: string;
+  thumbnail: string;
   description: string;
 }
 
@@ -41,6 +42,7 @@ function ProdList() {
     onSuccess: () => {
       message.success("Đã xóa sản phẩm");
       queryClient.invalidateQueries({ queryKey: ["products"] }); // ✅ Đúng cú pháp
+      queryClient.invalidateQueries({ queryKey: ["products"] }); 
     },
     onError: () => {
       message.error("Xóa sản phẩm thất bại");
@@ -65,7 +67,7 @@ function ProdList() {
     },
     {
       title: "Image",
-      dataIndex: "thumbnail", // ✅ sửa lại
+      dataIndex: "thumbnail",
       render: (src: string, record: Product) => (
         <Image
           src={src}

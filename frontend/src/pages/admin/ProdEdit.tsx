@@ -17,12 +17,11 @@ const { Option } = Select;
 function ProdEdit() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const { id } = useParams(); // 🔍 Lấy id sản phẩm từ URL
-
+  const { id } = useParams(); 
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
 
-  // 📥 Lấy danh mục & thương hiệu
+  //  Lấy danh mục & thương hiệu
   useEffect(() => {
     const fetchMeta = async () => {
       const [brandRes, categoryRes] = await Promise.all([
@@ -35,7 +34,7 @@ function ProdEdit() {
     fetchMeta();
   }, []);
 
-  // 📦 Lấy chi tiết sản phẩm
+  // Lấy chi tiết sản phẩm
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", id],
     queryFn: async () => {
@@ -45,14 +44,14 @@ function ProdEdit() {
     enabled: !!id,
   });
 
-  // 📝 Điền dữ liệu vào form sau khi load xong
+  // Điền dữ liệu vào form sau khi load xong
   useEffect(() => {
     if (product) {
       form.setFieldsValue(product);
     }
   }, [product, form]);
 
-  // 📤 Gửi request cập nhật sản phẩm
+  // Gửi request cập nhật sản phẩm
   const updateProduct = async (values: any) => {
     return await axios.put(`http://localhost:3000/products/${id}`, {
       ...values,
@@ -63,7 +62,7 @@ function ProdEdit() {
     mutationFn: updateProduct,
     onSuccess: () => {
       message.success("Cập nhật thành công!");
-      navigate("/products");
+      navigate("/admin/products");
     },
     onError: () => {
       message.error("Cập nhật thất bại!");
@@ -119,6 +118,14 @@ function ProdEdit() {
           rules={[{ required: true, message: "Nhập URL ảnh" }]}
         >
           <Input placeholder="https://..." />
+        </Form.Item>
+
+        <Form.Item
+          label="Mô tả sản phẩm"
+          name="description"
+          rules={[{ required: true, message: "Vui lòng nhập mô tả sản phẩm" }]}
+        >
+          <Input.TextArea placeholder="Nhập mô tả chi tiết sản phẩm" rows={4} />
         </Form.Item>
 
         <Form.Item
