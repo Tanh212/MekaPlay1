@@ -9,6 +9,9 @@ import OrderList from "../pages/admin/OrderList";
 import CategoryList from "../pages/admin/CategoryList";
 import BrandList from "../pages/admin/BrandList";
 import UserList from "../pages/admin/UserList";
+import Register from "../pages/auth/Register";
+import Login from "../pages/auth/Login";
+import ProdEdit from "../pages/admin/ProdEdit";
 
 const router = createBrowserRouter([
   {
@@ -26,12 +29,6 @@ const router = createBrowserRouter([
         <AdminLayout />
       </ProtectedRoute>
     ),
-
-    // element: (
-    //   // <ProtectedRoute>
-    //   //   {/* <AdminLayout /> */}
-    //   // </ProtectedRoute>
-    // ),
     children: [
       { index: true, element: <ProdList /> },
       { path: "products", element: <ProdList /> },
