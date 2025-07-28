@@ -34,17 +34,21 @@
   "users": [
     {
       "id": 1,
-      "name": "Admin",
-      "email": "admin@meka.com",
-      "password": "123456",
+      "email": "admin@gmail.com",
+      "password": "123456789",
       "role": "admin"
     },
     {
       "id": 2,
-      "name": "User A",
       "email": "usera@gmail.com",
       "password": "123456",
       "role": "user"
+    },
+    {
+      "email": "anhtien210204@gmail.com",
+      "password": "$2a$10$T1kCiWkJmIJ.WQh6meNUe.KHet/DjIgYzIdMm5mj.n3BXy/MXOCI2",
+      "role": "admin",
+      "id": 3
     }
   ],
   "orders": [

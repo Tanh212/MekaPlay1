@@ -8,6 +8,8 @@ import BrandList from "../pages/admin/BrandList";
 import ProdAdd from "../pages/admin/ProdAdd";
 import { Navigate } from "react-router-dom";
 import ProdEdit from "../pages/admin/ProdEdit";
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
 
 
 export const adminRoutes = {
@@ -16,9 +18,11 @@ export const adminRoutes = {
   children: [
     {
       index: true,
-      element: <Navigate to="/admin/products" />,
+      element: <Navigate to="/admin" />,
     },
     { index: true, element: <Dashboard /> },
+    {path: "login", element: <Login/>},
+    {path: "register", element: <Register/>},
     { path: "products", element: <ProdList /> },
     { path: "categories", element: <CategoryList /> },
     { path: "users", element: <UserList/> },
