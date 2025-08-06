@@ -10,6 +10,8 @@ import { Navigate } from "react-router-dom";
 import ProdEdit from "../pages/admin/ProdEdit";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
+import CategoryAdd from "../pages/admin/CategoryAdd";
+import CategoryEdit from "../pages/admin/CategoryEdit";
 
 
 export const adminRoutes = {
@@ -25,6 +27,8 @@ export const adminRoutes = {
     {path: "register", element: <Register/>},
     { path: "products", element: <ProdList /> },
     { path: "categories", element: <CategoryList /> },
+    { path: "categories/add", element: <CategoryAdd /> },
+    { path: "categories/edit/:id", element: <CategoryEdit /> },
     { path: "users", element: <UserList/> },
     { path: "orders", element: <OrderList /> },
     { path: "brands", element: <BrandList /> },

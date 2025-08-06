@@ -13,8 +13,17 @@ import Register from "../pages/auth/Register";
 import Login from "../pages/auth/Login";
 import ProdEdit from "../pages/admin/ProdEdit";
 import ProdDetail from "../pages/admin/ProdDetail";
+import Dashboard from "../pages/admin/DashBoard";
+import CategoryAdd from "../pages/admin/CategoryAdd";
+import CategoryEdit from "../pages/admin/CategoryEdit";
+import Home from "../pages/admin/Home";
+import ProdDemo from "../pages/admin/ProdDemo";
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home/>
+  },
   {
     path: "/login",
     element: <Login />,
@@ -23,26 +32,31 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
-  { path: "/product/detail/:id", element: <ProdDetail /> },
+  { path: "/products/detail/:id", element: <ProdDetail /> },
   {
-    path: "/admin",
-    element: (
-      <ProtectedRoute>
-        <AdminLayout />
-      </ProtectedRoute>
-    ),
-    children: [
-      { index: true, element: <ProdList /> },
-      { path: "products", element: <ProdList /> },
-      { path: "products/add", element: <ProdAdd /> },
-      
-      { path: "products/edit/:id", element: <ProdEdit /> },
-      { path: "orders", element: <OrderList /> },
-      { path: "categories", element: <CategoryList /> },
-      { path: "brands", element: <BrandList /> },
-      { path: "users", element: <UserList /> },
-    ],
+    path:"/products",
+    element: <ProdDemo/>
   },
+{
+  path: "/admin",
+  element: <ProtectedRoute />, // Check login
+  children: [
+    {
+      element: <AdminLayout />, // Layout admin
+      children: [
+        { index: true, element: <Dashboard /> },
+        { path: "products", element: <ProdList /> },
+        { path: "products/add", element: <ProdAdd /> },
+        { path: "products/edit/:id", element: <ProdEdit /> },
+        { path: "orders", element: <OrderList /> },
+        { path: "categories", element: <CategoryList /> },
+        { path: "categories/add", element: <CategoryAdd /> },
+        { path: "categories/edit/:id", element: <CategoryEdit /> },
+        { path: "brands", element: <BrandList /> },
+        { path: "users", element: <UserList /> },
+      ]
+    }
+  ]
+}
 ]);
-
 export default router;

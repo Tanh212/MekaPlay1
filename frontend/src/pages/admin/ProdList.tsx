@@ -1,149 +1,98 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Image, Popconfirm, Space, Spin, Table, message } from "antd";
+import { Table, Image, Button, Popconfirm, message } from "antd";
+import { Link } from "react-router-dom";
+import { useList } from "../hooks/useList";
+import { useDelete } from "../hooks/useDelete";
 import HeaderBar from "../../components/admin/AHeader";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { DeleteOutlined, EditOutlined, PlusOutlined } from "@ant-design/icons";
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   price: number;
   image: string;
-  thumbnail: string;
-  description: string;
 }
 
-function ProdList() {
-  const [searchParams] = useSearchParams();
-  const name = searchParams.get("name") || "";
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+export default function ProdList() {
+  const { data, isLoading, error, refetch } = useList<Product>("products");
+  const deleteMutation = useDelete("products");
 
-  // Fetch product list
-  const fetchProducts = async (): Promise<Product[]> => {
-    const res = await fetch(`http://localhost:3000/products?name_like=${name}`);
-    if (!res.ok) throw new Error("Failed to fetch products");
-    return res.json();
+  const handleDelete = (id: string) => {
+    deleteMutation.mutate(id, {
+      onSuccess: () => {
+        message.success("Xoá sản phẩm thành công");
+        refetch(); // cập nhật lại danh sách
+      },
+    });
   };
 
-  const { data, isLoading, error } = useQuery<Product[]>({
-    queryKey: ["products", name],
-    queryFn: fetchProducts,
-  });
-
-  // Delete product mutation
-  const deleteMutation = useMutation({
-    mutationFn: async (id: number) => {
-      const res = await fetch(`http://localhost:3000/products/${id}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Xóa thất bại");
-    },
-    onSuccess: () => {
-      message.success("Đã xóa sản phẩm");
-      queryClient.invalidateQueries({ queryKey: ["products"] }); // ✅ Đúng cú pháp
-      queryClient.invalidateQueries({ queryKey: ["products"] }); 
-    },
-    onError: () => {
-      message.error("Xóa sản phẩm thất bại");
-    },
-  });
-  
   const columns = [
     {
       title: "ID",
       dataIndex: "id",
-      render: (id: number) => <Link to={`/product/detail/${id}`}>#{id}</Link>,
+      render: (id: string) => (
+        <Link to={`/products/detail/${id}`}>{id}</Link>
+      ),
     },
     {
-      title: "Name",
+      title: "Tên sản phẩm",
       dataIndex: "name",
     },
     {
-      title: "Price",
+      title: "Giá",
       dataIndex: "price",
-      sorter: (a: Product, b: Product) => a.price - b.price,
-      render: (price: number) => price.toLocaleString("vi-VN") + " ₫",
+      render: (price: number) => `${price.toLocaleString()}₫`,
     },
     {
-      title: "Image",
+      title: "Hình ảnh",
       dataIndex: "thumbnail",
-      render: (src: string, record: Product) => (
+      render: (src: string) => (
         <Image
           src={src}
           width={100}
-          alt={record.name}
-          fallback="https://via.placeholder.com/100"
+          fallback="https://via.placeholder.com/120x80?text=No+Image"
         />
       ),
     },
     {
-      title: "Description",
-      dataIndex: "description",
-      render: (desc: string) =>
-        desc?.length > 60 ? desc.slice(0, 60) + "..." : desc,
-    },
-    {
-      title: "Hành động",
-      dataIndex: "action",
+      title: "Thao tác",
       render: (_: any, record: Product) => (
-        <Space>
-          <Button
-            icon={<EditOutlined />}
-            onClick={() => navigate(`/admin/products/edit/${record.id}`)}
-          >
-            Sửa
-          </Button>
+        <div className="flex gap-2">
+          <Link to={`/admin/products/edit/${record.id}`}>
+            <Button type="default">Sửa</Button>
+          </Link>
+
           <Popconfirm
-            title="Xác nhận xóa?"
-            onConfirm={() => deleteMutation.mutate(record.id)}
-            okText="Xóa"
-            cancelText="Hủy"
+            title="Xác nhận xoá?"
+            onConfirm={() => handleDelete(record.id)}
+            okText="Xoá"
+            cancelText="Huỷ"
           >
-            <Button danger icon={<DeleteOutlined />}>
-              Xóa
+            <Button danger loading={deleteMutation.isPending}>
+              Xoá
             </Button>
           </Popconfirm>
-        </Space>
+        </div>
       ),
     },
   ];
 
   return (
-    <div style={{ padding: 24 }}>
+    <div className="p-6">
       <HeaderBar />
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: 16,
-        }}
-      >
-        <h2>Danh sách sản phẩm</h2>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => navigate("/admin/products/add")}
-        >
-          Thêm sản phẩm
-        </Button>
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-bold">Danh sách sản phẩm</h2>
+        <Link to="/admin/products/add">
+          <Button type="primary">Thêm sản phẩm</Button>
+        </Link>
       </div>
-      {isLoading ? (
-        <div style={{ textAlign: "center", marginTop: 40 }}>
-          <Spin size="large" />
-        </div>
-      ) : error ? (
-        <p style={{ color: "red" }}>Lỗi: {(error as Error).message}</p>
-      ) : (
-        <Table
-          dataSource={data}
-          columns={columns}
-          rowKey="id"
-          pagination={{ pageSize: 5 }}
-        />
-      )}
+      {error && <p className="text-red-500">Lỗi: {error.message}</p>}
+      
+      <Table
+        dataSource={data}
+        columns={columns}
+        rowKey="id"
+        loading={isLoading}
+        pagination={{ pageSize: 5 }}
+      />
     </div>
   );
 }
-
-export default ProdList;

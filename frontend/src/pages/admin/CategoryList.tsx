@@ -1,48 +1,80 @@
-import { useQuery } from "@tanstack/react-query";
-import { Table } from "antd";
-import HeaderBar from "../../components/admin/AHeader";
+import { Table, Button, Popconfirm, message, Spin } from "antd";
+import { Link } from "react-router-dom";
+import {useList} from "../hooks/useList";
+import axios from "axios";
+import { useState } from "react";
 
 interface Category {
   id: number;
   name: string;
 }
 
-function CategoryList() {
-  const fetchCategories = async (): Promise<Category[]> => {
-    const res = await fetch("http://localhost:3000/categories");
-    if (!res.ok) throw new Error("Failed to fetch categories");
-    return res.json();
-  };
+ function CategoryList() {
+  const { data, isLoading, error, refetch } = useList("categories");
+  const [deletingId, setDeletingId] = useState<number | null>(null);
 
-  const { data, isLoading, error } = useQuery<Category[]>({
-    queryKey: ["categories"],
-    queryFn: fetchCategories,
-  });
+  const handleDelete = async (id: number) => {
+    try {
+      setDeletingId(id);
+      await axios.delete(`http://localhost:3000/categories/${id}`);
+      message.success("Đã xoá danh mục");
+      refetch();
+    } catch (err) {
+      message.error("Xoá thất bại");
+    } finally {
+      setDeletingId(null);
+    }
+  };
 
   const columns = [
     {
-      title: "STT",
+      title: "ID",
       dataIndex: "id",
     },
     {
       title: "Tên danh mục",
       dataIndex: "name",
     },
+    {
+      title: "Hành động",
+      render: (_: any, record: Category) => (
+        <>
+          <Link to={`/admin/categories/edit/${record.id}`}>
+            <Button type="link">Sửa</Button>
+          </Link>
+          <Popconfirm
+            title="Xác nhận xoá?"
+            onConfirm={() => handleDelete(record.id)}
+          >
+            <Button type="link" danger loading={deletingId === record.id}>
+              Xoá
+            </Button>
+          </Popconfirm>
+        </>
+      ),
+    },
   ];
 
+  if (isLoading)
+    return (
+      <div style={{ textAlign: "center", marginTop: 40 }}>
+        <Spin size="large" />
+      </div>
+    );
+
+  if (error)
+    return <p style={{ color: "red" }}>Lỗi: {(error as Error).message}</p>;
+
   return (
-    <div style={{ padding: 24 }}>
-      <HeaderBar />
-      {error && <p style={{ color: "red" }}>Lỗi: {(error as Error).message}</p>}
-      <Table
-        dataSource={data}
-        columns={columns}
-        rowKey="id"
-        loading={isLoading}
-        pagination={{ pageSize: 5 }}
-      />
+    <div className="p-6">
+      <div className="flex justify-between mb-4">
+        <h2 className="text-xl font-semibold">Danh sách danh mục</h2>
+        <Link to="/admin/categories/add">
+          <Button type="primary">Thêm danh mục</Button>
+        </Link>
+      </div>
+      <Table rowKey="id" columns={columns} dataSource={data} />
     </div>
   );
 }
-
 export default CategoryList;

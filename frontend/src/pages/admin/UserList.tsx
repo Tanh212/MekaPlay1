@@ -1,37 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { Table } from "antd";
+import { Image, Spin, Table } from "antd";
 import { Link, useSearchParams } from "react-router-dom";
+import { useList } from "../hooks/useList";
 import HeaderBar from "../../components/admin/AHeader";
 
 interface User {
-  id: number;
+  id: string;
   name: string;
-  email: string;
+  price: number;
 }
-
 function UserList() {
-  const [searchParams] = useSearchParams();
-  const name = searchParams.get("name");
-
-  const fetchUsers = async () => {
-    const res = await fetch(
-      `http://localhost:3000/users?name_like=${name || ""}`
-    );
-    return res.json();
-  };
-
-  const { data, isLoading, error } = useQuery<User[]>({
-    queryKey: ["users", name], // thêm `name` vào queryKey để re-fetch khi search thay đổi
-    queryFn: fetchUsers,
-  });
+  const { data, isLoading, error } = useList("users");
 
   const columns = [
     {
       title: "ID",
       dataIndex: "id",
-      render: (id: number) => (
-        <Link to={`/user/detail/${id}`}>#{id}</Link>
-      ),
     },
     {
       title: "Name",
@@ -42,18 +26,16 @@ function UserList() {
       dataIndex: "email",
     },
   ];
-
   return (
-    <div style={{ padding: 24 }}>
+    <div>
       <HeaderBar />
-      {error && <p style={{ color: "red" }}>Error: {(error as Error).message}</p>}
-
+      {error && <p>Error: {error.message}</p>}
       <Table
         dataSource={data}
         columns={columns}
-        rowKey="id"
-        loading={isLoading}
-        pagination={{ pageSize: 5 }}
+        rowKey={"id"}
+        loading={isLoading} // Hiển thị spinner khi đang tải
+        pagination={{ pageSize: 5 }} // Phân trang, mỗi trang 5 bản ghi
       />
     </div>
   );

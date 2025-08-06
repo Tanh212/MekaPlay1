@@ -1,70 +1,46 @@
-import { Button, Card, Form, Input, Typography, message } from "antd";
-import axios from "axios";
+import { Form, Input, Button } from "antd";
+import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "../../stores/auth";
 
-const { Title } = Typography;
-
-const Login = () => {
+function Login() {
+  const [form] = Form.useForm();
   const navigate = useNavigate();
-  const { setToken } = useAuthStore(); // ✅ gọi action từ store
+  const { mutate, isPending } = useAuth("login");
 
-const handleLogin = async (values: { email: string; password: string }) => {
-  try {
-    const res = await axios.post("http://localhost:3000/login",values);
-
-    setToken(res.data.accessToken); // ✅ cập nhật vào Zustand store
-    localStorage.setItem("token", res.data.accessToken);
-    message.success("Đăng nhập thành công!");
-    if(res.status === 200){
-    navigate("/admin");
-    }
-  } catch (error: any) {
-    message.error("Email hoặc mật khẩu không đúng!");
-  }
-};
-
+  const onFinish = (values: any) => {
+    mutate(values, {
+      onSuccess: () => {
+        navigate("/admin");
+      },
+    });
+  };
 
   return (
-    <div
-      style={{
-        display: "flex",
-        height: "100vh",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#141414",
-      }}
-    >
-      <Card style={{ width: 400, background: "#1f1f1f", color: "#fff" }}>
-        <Title level={3} style={{ color: "#fff", textAlign: "center" }}>
-          Đăng nhập Admin
-        </Title>
-        <Form layout="vertical" onFinish={handleLogin}>
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[{ required: true, message: "Vui lòng nhập email" }]}
-          >
-            <Input />
-          </Form.Item>
+    <div className="max-w-md mx-auto mt-10 p-6 border rounded-lg bg-white">
+      <h1 className="text-2xl font-bold mb-4 text-center">Đăng nhập</h1>
+      <Form form={form} layout="vertical" onFinish={onFinish}>
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[{ required: true, message: "Nhập email" }]}
+        >
+          <Input type="email" />
+        </Form.Item>
 
-          <Form.Item
-            label="Mật khẩu"
-            name="password"
-            rules={[{ required: true, message: "Vui lòng nhập mật khẩu" }]}
-          >
-            <Input.Password />
-          </Form.Item>
+        <Form.Item
+          label="Mật khẩu"
+          name="password"
+          rules={[{ required: true, message: "Nhập mật khẩu" }]}
+        >
+          <Input.Password />
+        </Form.Item>
 
-          <Form.Item>
-            <Button type="primary" htmlType="submit" block>
-              Đăng nhập
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
+        <Button type="primary" htmlType="submit" block loading={isPending}>
+          Đăng nhập
+        </Button>
+      </Form>
     </div>
   );
-};
+}
 
 export default Login;

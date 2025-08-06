@@ -2,27 +2,34 @@
 import { Layout, Avatar, Dropdown, Menu } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import useAuthStore from "../../stores/auth"; // nếu bạn dùng Zustand
+import useAuthStore from "../../stores/useAuthStore"; // ✅ đúng tên file store
 
 const { Header } = Layout;
 
 const HeaderBar = () => {
   const navigate = useNavigate();
-  const { setToken } = useAuthStore(); // nếu có Zustand
+  const logout = useAuthStore((s) => s.logout); // ✅ lấy hàm logout từ Zustand
 
   const handleLogout = () => {
-    localStorage.removeItem("token");       // ✅ Xoá token trong localStorage
-    setToken(null);                         // ✅ Cập nhật Zustand (nếu dùng)
-    navigate("/login", { replace: true });  // ✅ Redirect về login và replace history
+    logout();                 // xoá token + user từ Zustand và localStorage
+    navigate("/", { replace: true }); // về Home
   };
 
   const menu = (
-    <Menu>
-      <Menu.Item key="profile">Tài khoản</Menu.Item>
-      <Menu.Item key="logout" onClick={handleLogout}>
-        Đăng xuất
-      </Menu.Item>
-    </Menu>
+    <Menu
+      items={[
+        {
+          key: "profile",
+          label: "Tài khoản",
+          onClick: () => navigate("/admin/users"),
+        },
+        {
+          key: "logout",
+          label: "Đăng xuất",
+          onClick: handleLogout,
+        },
+      ]}
+    />
   );
 
   return (
@@ -35,7 +42,7 @@ const HeaderBar = () => {
         alignItems: "center",
       }}
     >
-      <Dropdown overlay={menu}>
+      <Dropdown overlay={menu} trigger={["click"]}>
         <Avatar icon={<UserOutlined />} style={{ cursor: "pointer" }} />
       </Dropdown>
     </Header>
