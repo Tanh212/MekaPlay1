@@ -1,29 +1,21 @@
-import { Button, Form, Input, InputNumber, Select, message } from "antd";
-
+import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { useList } from "../hooks/useList";
 import { useAdd } from "../hooks/useAdd";
 
-function ProdAdd() {
+function CategoryAdd() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const createMutation = useAdd("products");
+  const createMutation = useAdd("categories");
 
   const [thumbnailPreview, setThumbnailPreview] = useState("");
-
-  const { data: brands } = useList<{ id: string; name: string }>("brands");
-  const { data: categories } = useList<{ id: string; name: string }>("categories");
 
   const handleSubmit = (values: any) => {
     createMutation.mutate(values, {
       onSuccess: () => {
-        message.success("Thêm danh mục thành công");
         form.resetFields();
-        navigate("/categories");
-      },
-      onError: () => {
-        message.error("Thêm danh mục thất bại");
+        setThumbnailPreview("");
+        navigate("/admin/categories");
       },
     });
   };
@@ -46,13 +38,37 @@ function ProdAdd() {
           name="name"
           rules={[
             { required: true, message: "Vui lòng nhập tên danh mục" },
-            { min: 3, message: "Tên quá ngắn (ít nhất 3 ký tự)" },
+            { min: 2, message: "Tên quá ngắn (ít nhất 2 ký tự)" },
           ]}
         >
           <Input placeholder="Nhập tên danh mục" />
         </Form.Item>
 
-      
+        <Form.Item
+          label="Ảnh danh mục"
+          name="thumbnail"
+          rules={[
+            { required: true, message: "Vui lòng nhập link ảnh" },
+            { type: "url", message: "Link không hợp lệ" },
+          ]}
+        >
+          <Input placeholder="https://..." />
+        </Form.Item>
+
+        {thumbnailPreview && (
+          <div className="mb-4">
+            <img
+              src={thumbnailPreview}
+              alt="preview"
+              onError={(e) =>
+                (e.currentTarget.src =
+                  "https://via.placeholder.com/150x100?text=No+Image")
+              }
+              className="max-h-[120px] border rounded object-cover"
+            />
+          </div>
+        )}
+
         <Form.Item>
           <Button
             type="primary"
@@ -67,4 +83,4 @@ function ProdAdd() {
   );
 }
 
-export default ProdAdd;
+export default CategoryAdd;

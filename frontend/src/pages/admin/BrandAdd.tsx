@@ -1,66 +1,79 @@
-import {
-  Button,
-  Form,
-  Input,
-  message,
-  Typography,
-} from "antd";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import { Button, Form, Input } from "antd";
 import { useNavigate } from "react-router-dom";
-
-const { Title } = Typography;
-
-interface BrandFormValues {
-  name: string;
-}
+import { useState } from "react";
+import { useAdd } from "../hooks/useAdd";
 
 function BrandAdd() {
-  const [form] = Form.useForm<BrandFormValues>();
+  const [form] = Form.useForm();
   const navigate = useNavigate();
+  const createMutation = useAdd("brands");
 
-  const mutation = useMutation({
-    mutationFn: (values: BrandFormValues) =>
-      axios.post("http://localhost:3000/brands", values),
-    onSuccess: () => {
-      message.success("Đã thêm thương hiệu!");
-      navigate("/admin/brands"); // Điều hướng sau khi thêm thành công
-    },
-    onError: () => {
-      message.error("Thêm thương hiệu thất bại!");
-    },
-  });
+  const [thumbnailPreview, setThumbnailPreview] = useState("");
 
-  const handleSubmit = (values: BrandFormValues) => {
-    mutation.mutate(values);
+  const handleSubmit = (values: any) => {
+    createMutation.mutate(values, {
+      onSuccess: () => {
+        form.resetFields();
+        setThumbnailPreview("");
+        navigate("/admin/brands");
+      },
+    });
   };
 
   return (
-    <div style={{ padding: 24, maxWidth: 600, margin: "auto" }}>
-      <Title level={3}>Thêm thương hiệu mới</Title>
+    <div className="mt-6 max-w-[800px] mx-auto px-6">
+      <h1 className="text-3xl font-bold text-center mb-6">Thêm thương hiệu</h1>
 
       <Form
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
         autoComplete="off"
+        onValuesChange={(changed) => {
+          if (changed.thumbnail) setThumbnailPreview(changed.thumbnail);
+        }}
       >
         <Form.Item
           label="Tên thương hiệu"
           name="name"
           rules={[
             { required: true, message: "Vui lòng nhập tên thương hiệu" },
-            { min: 2, message: "Tối thiểu 2 ký tự" },
+            { min: 2, message: "Tên quá ngắn (ít nhất 2 ký tự)" },
           ]}
         >
-          <Input placeholder="thương hiệu" />
+          <Input placeholder="Nhập tên thương hiệu" />
         </Form.Item>
+
+        <Form.Item
+          label="Logo thương hiệu"
+          name="thumbnail"
+          rules={[
+            { required: true, message: "Vui lòng nhập link ảnh" },
+            { type: "url", message: "Link không hợp lệ" },
+          ]}
+        >
+          <Input placeholder="https://..." />
+        </Form.Item>
+
+        {thumbnailPreview && (
+          <div className="mb-4">
+            <img
+              src={thumbnailPreview}
+              alt="preview"
+              onError={(e) =>
+                (e.currentTarget.src =
+                  "https://via.placeholder.com/150x100?text=No+Image")
+              }
+              className="max-h-[120px] border rounded object-cover"
+            />
+          </div>
+        )}
 
         <Form.Item>
           <Button
             type="primary"
             htmlType="submit"
-            loading={mutation.isPending}
+            loading={createMutation.isPending}
           >
             Thêm thương hiệu
           </Button>

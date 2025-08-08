@@ -1,20 +1,20 @@
-// src/pages/CategoryEdit.tsx
+// src/pages/BrandEdit.tsx
 import { Form, Input, Button, message } from "antd";
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useEdit } from "../hooks/useEdit";
 import axios from "axios";
 
-function CategoryEdit() {
+function BrandEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [form] = Form.useForm();
 
-  const updateMutation = useEdit("categories", id);
+  const updateMutation = useEdit("brands", id);
 
   useEffect(() => {
     if (id) {
-      axios.get(`http://localhost:3000/categories/${id}`).then((res) => {
+      axios.get(`http://localhost:3000/brands/${id}`).then((res) => {
         form.setFieldsValue(res.data);
       });
     }
@@ -23,19 +23,19 @@ function CategoryEdit() {
   const handleSubmit = (values: any) => {
     updateMutation.mutate(values, {
       onSuccess: () => {
-        message.success("Cập nhật danh mục thành công");
-        navigate("/admin/categories");
+        message.success("Cập nhật thương hiệu thành công");
+        navigate("/admin/brands");
       },
     });
   };
 
   return (
     <div className="max-w-[600px] mx-auto mt-6 px-6">
-      <h1 className="text-3xl font-bold mb-4 text-center">Sửa danh mục</h1>
+      <h1 className="text-3xl font-bold mb-4 text-center">Sửa thương hiệu</h1>
 
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
         <Form.Item
-          label="Tên danh mục"
+          label="Tên thương hiệu"
           name="name"
           rules={[{ required: true, message: "Không được bỏ trống" }]}
         >
@@ -56,4 +56,4 @@ function CategoryEdit() {
   );
 }
 
-export default CategoryEdit;
+export default BrandEdit;
