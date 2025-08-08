@@ -5,7 +5,7 @@ const Dashboard = () => {
   return(
   <div>
      <HeaderBar />
-    <h1>Chào mừng Admin đến với MekaPlay 🎉</h1>
+    <h1>Chào mừng đến trang Admin 🎉</h1>
     
     </div>
   )

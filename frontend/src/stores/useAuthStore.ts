@@ -1,5 +1,11 @@
 import { create } from "zustand";
 
+interface User{
+  id: number;
+  email: string;
+  role: string;
+}
+
 interface AuthState {
   token: string | null;
   user: any;
