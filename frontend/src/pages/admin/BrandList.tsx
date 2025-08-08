@@ -40,13 +40,13 @@ interface Category {
       render: (_: any, record: Category) => (
         <>
           <Link to={`/admin/brands/edit/${record.id}`}>
-            <Button type="link">Sửa</Button>
+            <Button type="default">Sửa</Button>
           </Link>
           <Popconfirm
             title="Xác nhận xoá?"
             onConfirm={() => handleDelete(record.id)}
           >
-            <Button type="link" danger loading={deletingId === record.id}>
+            <Button danger loading={deletingId === record.id}>
               Xoá
             </Button>
           </Popconfirm>
